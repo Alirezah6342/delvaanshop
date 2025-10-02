@@ -1,0 +1,79 @@
+{% comment %} <ul class="{% if level == 0 %}sub-menu{% else %}sub-sub-menu{% endif %}">
+  {% for category in categories %}
+    <li class="{% if category.get_children %}has-submenu{% endif %}">
+      <a href="{% url 'category_detail' category.pk category.slug %}">{{ category.title }}</a>
+      {% if category.get_children %}
+        {% include "store/partials/category_menu.html" with categories=category.get_children level=level|add:"1" %}
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul> {% endcomment %}
+
+
+
+{% comment %} <ul class="{% if level == 0 %}main-menu{% elif level == 1 %}sub-menu{% else %}sub-sub-menu{% endif %}">
+  {% for category in categories %}
+    <li class="{% if category.get_children %}has-submenu{% endif %}">
+      <a href="{% url 'category_detail' category.pk category.slug %}">
+        {{ category.title }}
+      </a>
+
+      {% if category.get_children %}
+        {% include "store/partials/category_menu.html" 
+           with categories=category.get_children level=level|add:"1" %}
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul> {% endcomment %}
+
+
+
+
+{% comment %} <ul class="{% if level == 0 %}sub-menu{% else %}sub-sub-menu{% endif %}">
+  {% for category in categories %}
+    <li class="{% if category.get_children %}has-submenu{% endif %}">
+      <a href="{% url 'category_detail' category.pk category.slug %}">{{ category.title }}</a>
+      {% if category.get_children %}
+        {% include "store/partials/category_menu.html" with categories=category.get_children level=level|add:"1" %}
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul> {% endcomment %}
+
+
+
+
+
+
+{% comment %} <ul class="{% if level == 0 %}sub-menu{% else %}sub-sub-menu{% endif %}">
+  {% for category in categories %}
+    <li class="{% if category.get_children %}has-submenu{% endif %}">
+      <a href="{% url 'category_detail' category.pk category.slug %}">{{ category.title }}</a>
+      {% if category.get_children %}
+        {% include "store/partials/category_menu.html" 
+                   with categories=category.get_children level=level|add:"1" %}
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul> {% endcomment %}
+
+
+
+
+{% comment %}
+  Recursive template برای نمایش دسته‌ها
+  level=0 → دسته‌های اصلی
+  level>0 → زیرمنوها
+{% endcomment %}
+
+{% for category in categories %}
+    <li class="{% if category.get_children %}has-submenu{% endif %}">
+        <a href="{% url 'category_detail' category.pk category.slug %}">{{ category.title }}</a>
+
+        {% if category.get_children %}
+            <ul class="{% if level == 0 %}sub-menu{% else %}sub-sub-menu{% endif %}">
+                {% include "store/partials/category_menu.html" with categories=category.get_children level=level|add:"1" %}
+            </ul>
+        {% endif %}
+    </li>
+{% endfor %}

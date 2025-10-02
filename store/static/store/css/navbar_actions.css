@@ -1,0 +1,164 @@
+/* ========================
+   CSS Variables برای مدیریت تم
+======================== */
+:root {
+    --bg-color: #fff;
+    --text-color: #1c068a;
+    --btn-bg: #ffffff;
+    --btn-hover-bg: #f8f9fa;
+    --btn-hover-color: #f54790;
+}
+
+/* حالت دارک */
+body.dark-theme {
+    --bg-color: #c4c1d9;
+    --text-color: #f8f9fa;
+    --btn-bg: #333;
+    --btn-hover-bg: #444;
+    --btn-hover-color: #f54790;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+/* ========================
+   کانتینر اصلی دکمه‌ها
+======================== */
+.buy-button {
+    display: flex;
+    align-items: center;      /* وسط چین عمودی */
+    justify-content: flex-end; /* دکمه‌ها سمت راست */
+    gap: 10px;                /* فاصله بین دکمه‌ها */
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+/* ========================
+   دکمه عمومی (آیکون‌ها)
+======================== */
+.btn-icon {
+    display: flex;
+    align-items: center;      /* وسط چین عمودی */
+    justify-content: center;  /* وسط چین افقی */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--btn-bg);
+    color: var(--text-color);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-icon:hover {
+    transform: translateY(-2px);
+    color: var(--btn-hover-color);
+    background-color: var(--btn-hover-bg);
+    box-shadow: 0 0 0 2px var(--btn-hover-color);
+}
+
+/* ========================
+   آیکن‌ها داخل دکمه (بهینه شده)
+======================== */
+.btn-icon i,
+.btn-icon svg {
+    display: block;       /* بلاک کردن برای وسط چین */
+    margin: 0 auto;
+    width: 20px;
+    height: 20px;
+}
+
+/* ========================
+   Dropdown (منوی جستجو)
+======================== */
+.dd-menu {
+    min-width: 280px;
+    padding: 8px;
+    border-radius: 10px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.searchform {
+    display: flex;
+    align-items: center;
+}
+
+.searchform input {
+    flex: 1;
+    height: 38px;
+    font-size: 14px;
+    border-radius: 6px 0 0 6px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid #ccc;
+}
+
+.searchform button {
+    height: 38px;
+    border-radius: 0 6px 6px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+}
+
+/* ========================
+   تم باتن (HTML + CSS)
+======================== */
+.theme-switch {
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+
+.theme-checkbox {
+    display: none;
+}
+
+.theme-label {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: var(--btn-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-label:hover {
+    color: var(--btn-hover-color);
+    box-shadow: 0 0 0 2px var(--btn-hover-color);
+}
+
+.theme-label .sun {
+    display: none;
+}
+
+.theme-checkbox:checked + .theme-label .moon {
+    display: none;
+}
+
+.theme-checkbox:checked + .theme-label .sun {
+    display: inline;
+}
+
+/* ========================
+   واکنش‌گرایی
+======================== */
+@media (max-width: 600px) {
+    .dd-menu {
+        width: 100%;
+        max-width: 220px;
+    }
+    .buy-button {
+        gap: 5px;
+    }
+}
