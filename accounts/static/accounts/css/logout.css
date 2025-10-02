@@ -1,0 +1,81 @@
+.logout-page {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(198, 192, 192);
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+.logout-container {
+  background-color: #171717;
+  padding: 2em;
+  border-radius: 30px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  color: white;
+}
+
+.message {
+  text-align: center;
+  margin-bottom: 1em;
+  font-size: 1em;
+  color: lightgreen;
+}
+
+.menu {
+  list-style: none;
+  padding: 0;
+  margin: 1em 0 2em 0;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.menu li a {
+  color: #ccc;
+  text-decoration: none;
+  padding: 0.5em 1em;
+  transition: 0.3s ease;
+  border-radius: 15px;
+}
+
+.menu li a:hover {
+  background-color: #252525;
+  color: white;
+}
+
+.logout-panel {
+  text-align: center;
+}
+
+.logout-panel h2 {
+  margin-bottom: 1.5em;
+  font-size: 1.1em;
+  color: #f1f1f1;
+}
+
+.button1 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 2rem;
+  border-radius: 100px;
+  background-color: #252525;
+  color: white;
+  font-size: 1em;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  transition: 0.4s ease-in-out;
+  min-width: 140px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.button1:hover {
+  background-color: black;
+  color: white;
+}

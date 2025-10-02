@@ -1,0 +1,121 @@
+/* صفحه لاگین */
+.login-page {
+  margin: 0;
+  height: 100vh;
+  background-color: rgb(198, 192, 192);
+  font-family: Tahoma, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+/* فرم وسط صفحه */
+.login-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2em;
+}
+
+/* فرم لاگین */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 2em;
+  background-color: #171717;
+  border-radius: 25px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  width: 100%;
+  max-width: 400px;
+  transition: transform 0.3s ease;
+}
+
+.login-form:hover {
+  transform: scale(1.03);
+}
+
+/* عنوان فرم */
+#heading {
+  text-align: center;
+  font-size: 1.3em;
+  color: #fff;
+  margin-bottom: 1.5em;
+}
+
+/* فیلد ورودی */
+.field {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  background-color: #171717;
+  padding: 0.6em 1em;
+  border-radius: 20px;
+  box-shadow: inset 2px 5px 10px rgba(0,0,0,0.5);
+}
+
+.input-icon {
+  width: 18px;
+  height: 18px;
+  fill: white;
+}
+
+.input-field {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  flex: 1;
+  font-size: 1em;
+}
+
+.input-field::placeholder {
+  color: rgba(255,255,255,0.7);
+}
+
+/* دکمه‌ها */
+.btn {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 1em;
+}
+
+.button1 {
+  flex: 1;
+  padding: 0.6em 1.2em;
+  border-radius: 50px;
+  background-color: #252525;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.button1:hover {
+  background-color: #000;
+}
+
+.button3 {
+  margin-top: 10px;
+  padding: 0.5em 1em;
+  border-radius: 50px;
+  background-color: #252525;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.button3:hover {
+  background-color: red;
+}
+
+/* واکنش‌گرا */
+@media (max-width: 600px) {
+  .login-form {
+    width: 90%;
+    padding: 1.5em;
+  }
+}

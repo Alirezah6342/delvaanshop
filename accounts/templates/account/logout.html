@@ -1,0 +1,44 @@
+{% extends "_base.html" %}
+
+
+{% load static %}
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'accounts/css/logout.css' %}">
+{% endblock extra_css %}
+
+
+
+
+{% block content %}
+    <body class="logout-page">
+
+  <div class="logout-container">
+
+    <p class="message">✅ Successfully signed in as <strong>alireza</strong>.</p>
+
+    <ul class="menu">
+      <li><a href="{% url 'account_email' %}">Change Email</a></li>
+      <li><a href="{% url 'account_change_password' %}">Change Password</a></li>
+      <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
+    </ul>
+
+    <div class="logout-panel">
+      <h2>Are you sure you want to sign out?</h2>
+      <form method="POST" action="{% url 'account_logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="button1">Sign Out</button>
+      </form>
+    </div>
+
+  </div>
+{% endblock content %}
+
+
+
+
+
+
+
+
+
