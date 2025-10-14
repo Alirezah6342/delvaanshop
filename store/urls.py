@@ -5,6 +5,7 @@ from .converters import UnicodeSlugConverter
 
 register_converter(UnicodeSlugConverter, "uslug")
 
+
 urlpatterns = [
     path('', views.HomeView.as_view(), name='home_page'),
     path('categories/', views.CategoryListView.as_view(), name='category_list'),
@@ -14,6 +15,9 @@ urlpatterns = [
     path('search/', views.ProductSearchView.as_view(), name='search_results'),
     path('comment/<int:product_id>/', views.CommentCreateView.as_view(), name='comment_create'),
     path('api/', include('store.api.urls')),
+    path('cart/', views.cart_detail_view, name='cart_detail'),
+    path('cart/add/<int:product_id>/', views.add_to_cart_view, name='cart_add'),
+    path('cart/remove/<int:product_id>/', views.remove_from_cart, name='cart_remove'),
 ]
 
 

@@ -1,11 +1,14 @@
 from django.views import generic
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib import messages
+from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_POST
 from django.db.models import Prefetch
 from django.db.models import Q
 
-
-from .forms import ProductForm, CommentForm
+from .cart import Cart
+from .forms import ProductForm, CommentForm, AddToCartProductForm
 from .models import Category, Customer, Product, Comment
 
 
@@ -30,14 +33,14 @@ class CategoryDetailView(generic.DetailView):
     source_url_kwarg = 'slug'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('products')
+        return super().get_queryset().prefetch_related('products', 'children')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         categories = self.object.get_descendants(include_self=True) # type: ignore
-        products = Product.objects.filter(category__in=categories).select_related('category')
-        context['products'] = products
-        context["descendants"] = self.object.get_descendants(include_self=False).select_related("parent")  # type: ignore
+        products = Product.objects.filter(categories__in=categories).prefetch_related('categories')
+        context['products'] = products.distinct()
+        context["descendants"] = self.object.get_descendants(include_self=False).prefetch_related("parent")  # type: ignore
         return context
 
 
@@ -45,10 +48,10 @@ class ProductListView(generic.ListView):
     model = Product
     template_name = 'store/product_list.html'
     context_object_name = 'products'
-    paginate_by = 3
+    paginate_by = 4
     
     def get_queryset(self):
-        return Product.objects.filter(is_active=True).select_related('category')
+        return Product.objects.filter(is_active=True).prefetch_related('categories')
     
 
 
@@ -62,7 +65,12 @@ class ProductDetailView(generic.DetailView):
     
     
     def get_queryset(self):
-        return Product.objects.select_related('category')
+        return Product.objects.prefetch_related('categories').prefetch_related(
+            Prefetch(
+                'comments',
+                queryset=Comment.objects.select_related('user').order_by('-datetime_created')
+            )
+        )
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -81,6 +89,8 @@ class CommentCreateView(generic.CreateView):
         product = get_object_or_404(Product, id=product_id)
         obj.product = product
         
+        messages.success(self.request, _('Comment successfully created'))
+        
         return super().form_valid(form)
     
     
@@ -92,7 +102,7 @@ class ProductSearchView(generic.ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        queryset = Product.objects.filter(is_active=True).select_related('category')
+        queryset = Product.objects.filter(is_active=True).prefetch_related('categories')
         
         search_query = self.request.GET.get("q", "").strip()
         if search_query:
@@ -102,7 +112,7 @@ class ProductSearchView(generic.ListView):
         
         category_id = self.request.GET.get('category')
         if category_id:
-            queryset = queryset.filter(category_id=category_id)
+            queryset = queryset.filter(categories__id=category_id)
             
         min_price = self.request.GET.get('min_price')
         max_price = self.request.GET.get('max_price')
@@ -112,16 +122,58 @@ class ProductSearchView(generic.ListView):
         if max_price:
             queryset = queryset.filter(unit_price__lte=max_price)
             
-        return queryset
+        return queryset.distinct()
         
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        context['categories'] = Category.objects.all()
+        products = context['products']
+        
+        product_ids = [product.id for product in products]
+        product_ids = [p.id for p in products]
+        category_ids = (Category.objects.filter(products__id__in=product_ids).values_list("id", flat=True).distinct())
+        categories = Category.objects.filter(id__in=list(category_ids))
+        # categories = Category.objects.filter(products__in=products).distinct()
+        # if not hasattr(self, '_all_categories'):
+        #     self._all_categories = Category.objects.all()
+        context['categories'] = categories
         context['search_query'] = self.request.GET.get("q", "").strip()
         context['current_category'] = self.request.GET.get('category', '')
         context['min_price'] = self.request.GET.get('min_price', '')
         context['max_price'] = self.request.GET.get('max_price', '')
-        context['no_results'] = not self.get_queryset().exists()
+        context['no_results'] = not context['products'].exists()
         return context
+
+
+def cart_detail_view(request):
+    cart = Cart(request)
+    for item in cart:
+        item['product_update_quantity_form'] = AddToCartProductForm(initial={
+            'quantity': item['quantity'],
+            'inplace': True,
+            })
+    
+    return render(request, 'cart_detail.html', {'cart': cart, })
+ 
+ 
+@require_POST    
+def add_to_cart_view(request, product_id):
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    form = AddToCartProductForm(request.POST)
+    
+    if form.is_valid():
+        cleaned_data = form.cleaned_data
+        quantity = cleaned_data['quantity']
+        cart.add(product, quantity, replace_current_quantity=cleaned_data['inplace'])
+        
+    return redirect('cart_detail')
+
+def remove_from_cart(request, product_id):
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    
+    cart.remove(product)
+    
+    return redirect('cart_detail')

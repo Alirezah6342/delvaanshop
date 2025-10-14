@@ -8,7 +8,7 @@ from .serializers import AddCartItemSerializer, CartItemSerializer, CartSerializ
 from store.models import Cart, CartItem
 
 class CartPageview(TemplateView):
-    template_name = 'cart.html'
+    template_name = 'cart_detail.html'
     
 class CartItemViewSet(ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete', ]
@@ -35,7 +35,7 @@ class CartViewSet(CreateModelMixin,
     
     serializer_class = CartSerializer
     queryset = Cart.objects.prefetch_related('items__product').all()
-    lookup_value_regex = ('[0-9a-fA-F]{8}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{4}\-[0-9a-fA-F]{12}') # type: ignore
+    lookup_value_regex = ('[0-9a-fA-F]{8}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{4}\\-[0-9a-fA-F]{12}') # type: ignore
     
 
     
