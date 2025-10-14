@@ -1,0 +1,116 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+
+<!-- Search Form Popup -->
+<div class="searchform__popup" id="searchForm">
+    <a href="#" class="btn-close"><i class="flaticon flaticon-cross"></i></a>
+    <div class="searchform__body">
+        <p>در باکس زیر عبارت خود را وارد کنید</p>
+        <form class="searchform" method="get" action="{% url 'search_results' %}">
+            <input type="text" name="q" id="popup-search" class="searchform__input"
+                   placeholder="جستجو در بین محصولات..."
+                   value="{{ search_query }}">
+            <button type="submit" class="searchform__submit">
+                <i class="flaticon flaticon-magnifying-glass-icon"></i>
+            </button>
+        </form>
+    </div>
+</div>
+<!-- End Search Form Popup -->
+
+
+<!-- Search Form Main -->
+<div class="searchform__main">
+    <form method="get" action="{% url 'search_results' %}">
+        <input type="text" name="q" placeholder="جستجو در بین محصولات..." value="{{ search_query }}">
+
+        <!-- دسته‌بندی -->
+        {% if categories %}
+            <select name="category">
+                <option value="">همه دسته‌ها</option>
+
+                {% for cat in categories %}
+                    {% if not cat.parent %}
+                        <optgroup label="{{ cat.title }}">
+                            {% for sub in cat.get_descendants %}
+                                <option value="{{ sub.id }}" {% if sub.id|stringformat:"s" == current_category %}selected{% endif %}>
+                                    {{ sub.get_ancestors|join:" → " }}{% if sub.get_ancestors %} → {% endif %}{{ sub.title }}
+                                </option>
+                            {% endfor %}
+                        </optgroup>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        {% else %}
+            <p>دسته‌بندی‌ای یافت نشد.</p>
+        {% endif %}
+
+        <!-- فیلتر قیمت -->
+        <input type="number" name="min_price" placeholder="حداقل قیمت" value="{{ min_price }}">
+        <input type="number" name="max_price" placeholder="حداکثر قیمت" value="{{ max_price }}">
+        <button type="submit">جستجو</button>
+    </form>
+</div>
+<!-- End Search Form Main -->
+
+<hr>
+
+<!-- نتایج جستجو -->
+{% if no_results %}
+    <p>هیچ محصولی پیدا نشد!</p>
+{% else %}
+    <div class="products">
+        {% for product in products %}
+            <div class="product-item">
+                {% if product.cover %}
+                    <div class="product-image">
+                        <img src="{{ product.cover.url }}" alt="{{ product.name }}">
+                    </div>
+                {% endif %}
+
+                <a href="{{ product.get_absolute_url }}">
+                    <h3>{{ product.name }}</h3>
+                </a>
+
+                {% if product.short_description %}
+                    <p>{{ product.short_description }}</p>
+                {% endif %}
+
+                <p>قیمت: {{ product.unit_price }} تومان</p>
+
+                <!-- نمایش دسته‌بندی درختی محصول -->
+                <p>دسته‌بندی:
+                    {% for cat in product.categories.all %}
+                        {% with ancestors=cat.get_ancestors %}
+                            {% for ancestor in ancestors %}
+                                {{ ancestor.title }} →
+                            {% endfor %}
+                            {{ cat.title }}
+                        {% endwith %}
+                        {% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        بدون دسته‌بندی
+                    {% endfor %}
+                </p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- صفحه‌بندی -->
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?q={{ search_query }}&category={{ current_category }}&min_price={{ min_price }}&max_price={{ max_price }}&page={{ page_obj.previous_page_number }}">صفحه قبل</a>
+        {% endif %}
+
+        <span>صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?q={{ search_query }}&category={{ current_category }}&min_price={{ min_price }}&max_price={{ max_price }}&page={{ page_obj.next_page_number }}">صفحه بعد</a>
+        {% endif %}
+    </div>
+{% endif %}
+
+{% endblock %}

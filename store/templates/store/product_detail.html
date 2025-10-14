@@ -30,7 +30,10 @@
                 <div class="container">
                     <div class="row no-gutters mb--80">
                         <div class="col-12 col-sm-4 product-main-image d-flex align-content-center">
-                            <img class="m-auto" style="max-height: 400px;" src="https://dkstatics-public.digikala.com/digikala-products/8f34ee9823202d09ee97deb9b1c8e3300a9a24d8_1643265727.jpg?x-oss-process=image/resize,w_1600/quality,q_80" alt="">
+                            {% if product.cover %}
+                                <img class="shadow" class="m-auto" style="max-height: 400px;" src="{{ product.cover.url }}" alt="{{ product.name }}">
+
+                            {% endif %}
                         </div>
                         <div class="col-12 col-sm-8 product-main-details mt-md--50">
                             <div class="product-summary pl-lg--30 pl-md--0 text-right p-4">
@@ -39,28 +42,39 @@
                                 {{ product.description }}
                                 </p>
                                 <div class="my-5 py-5 product-price-wrapper mb--25">
-                                    <span class="money text-success">{{ product.unit_price }} تومان</span>
+                                    <span class="money text-success">{{ product.unit_price }} {% trans "$" %}</span>
                                     <span class="price-separator">-</span>
-                                    <span class="money old-price text-danger">۲۱۰,۰۰۰ تومان</span>
+                                    <span class="money old-price text-danger">۲۱۰,۰۰۰ {% trans "$" %}</span>
                                 </div>
                                 <div class="product-action d-flex align-items-sm-center align-content-center mb--30">
-                                    <div class="quantity-wrapper d-flex justify-content-start">
-                                        <div class="quantity">
-                                            <input type="number" class="quantity-input" name="qty" id="qty" value="1" min="1">
+                                    <form action="{% url 'cart_add' product.id %}" method="POST">
+                                        {% csrf_token %}
+                                            <div class="quantity-wrapper d-flex justify-content-start">
+                                                <div class="quantity">
+                                                    <input type="number" class="quantity-input" name="quantity" id="qty" value="1" min="1" max="30">
+                                                </div>
+                                                <button type="submit" class="btn btn-small btn-bg-red btn-color-white btn-hover-2">
+                                                        {% translate 'Add to Cart' %}
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <button type="button" class="btn btn-small btn-bg-red btn-color-white btn-hover-2" onclick="window.location.href='cart.html'">
-                                        {% translate 'Add to Cart' %}
-                                    </button>
-                                </div>
+                                    </form>
                                 <div class="product-footer-meta mt-5 pt-5">
                                     <p><span class="m-0">{% translate 'Categories' %}:</span>
-                                        <a href="shop.html">لباس</a>,
-                                        <a href="shop.html">تابستانی</a>,
-                                        <a href="shop.html">گرم</a>,
-                                        <a href="shop.html">زنانه</a>
+                                        {% for cat in product.categories.all %}
+                                            {% with ancestors=cat.get_ancestors %}
+                                                {% for ancestor in ancestors %}
+                                                    <a href="{{ ancestor.get_absolute_url }}">{{ ancestor.title }}</a> →
+                                                {% endfor %}
+                                                <a href="{{ cat.get_absolute_url }}">{{ cat.title }}</a>
+                                            {% endwith %}
+                                            {% if not forloop.last %}, {% endif %}
+                                        {% empty %}
+                                            {% translate "No categories" %}
+                                        {% endfor %}
                                     </p>
                                 </div>
+
                             </div>
                         </div>
                     </div>
@@ -146,6 +160,8 @@
                                                 <div class="row">
                                                     <div class="border-top py-5 w-100"></div>
                                                     <div class="col-lg-8 m-auto">
+                                                        <br>
+                                                        {% if user.is_authenticated %}
                                                         <span class="reply-title pull-right">{% translate 'Write your comment' %}</span>
                                                         <br>
                                                         <form action="{% url 'comment_create' product.id %}" method='POST'>
@@ -153,6 +169,12 @@
                                                             {{ comment_form|crispy }}
                                                             <input type="submit" value="{% translate 'Submit' %}">
                                                         </form>
+                                                        {% else %}
+                                                            <p>
+                                                                {% trans "To Write your comment please" %}
+                                                                <a href="{% url 'account_login' %}">{% trans "Login" %}</a>
+                                                            </p>    
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                             </div>
@@ -196,94 +218,35 @@
         <!-- Footer End-->
 
         <!-- Search form Popup Start -->
-        <div class="searchform__popup" id="searchForm">
-            <a href="#" class="btn-close"><i class="flaticon flaticon-cross"></i></a>
-            <div class="searchform__body">
-                <p>Start typing and press Enter to search</p>
-                <form class="searchform">
-                    <input type="text" name="popup-search" id="popup-search" class="searchform__input" placeholder="Search Entire Store...">
-                    <button type="submit" class="searchform__submit"><i class="flaticon flaticon-magnifying-glass-icon"></i></button>
-                </form>
-            </div>
-        </div>
+       <!-- ===== Search Popup Form (CSS-only) ===== -->
+<input type="checkbox" id="search-toggle" hidden>
+
+<li class="header-toolbar__item">
+    <!-- label به جای لینک href -->
+    <label for="search-toggle" class="header-toolbar__btn toolbar-btn">
+        <i class="flaticon flaticon-search"></i>
+    </label>
+</li>
+
+<div class="searchform__popup">
+    <!-- دکمه × برای بستن popup -->
+    <label for="search-toggle" class="btn-close">&times;</label>
+
+    <div class="searchform__body">
+        <p>در باکس زیر عبارت خود را وارد کنید:</p>
+        <form method="get" action="{% url 'search_results' %}">
+            <input type="text" name="q" placeholder="جستجو در بین محصولات..." value="{{ search_query }}">
+            <button type="submit">
+                <i class="flaticon flaticon-magnifying-glass-icon"></i> جستجو
+            </button>
+        </form>
+    </div>
+</div>
+
         <!-- Search form Popup End -->
 
-        <!-- Mini Cart Start -->
-        <aside class="mini-cart" id="miniCart">
-            <div class="mini-cart-wrapper">
-                <a href="" class="btn-close"><i class="flaticon flaticon-cross"></i></a>
-                <div class="mini-cart-inner">
-                    <h3 class="mini-cart__heading mb--40 mb-lg--30 text-right">سبد خرید</h3>
-                    <div class="mini-cart__content">
-                        <ul class="mini-cart__list text-right">
-                            <li class="mini-cart__product d-flex justify-content-between">
-                                <div class="mini-cart__product__image">
-                                    <a href="#">
-                                        <img src="assets/img/products/prod-1-100x100.jpg" alt="products">
-                                    </a>
-                                </div>
-                                <div class="mini-cart__product__content pt-2">
-                                    <span class="mini-cart__product__title d-flex flex-row justify-content-between">
-                                        <a href="#"> محصول سماره یک </a>
-                                        <a href="#" class="">
-                                            &#10060;
-                                        </a>
-                                    </span>
-                                    <span class="mini-cart__product__quantity">
-                                        <span>۴۹,۰۰۰ تومان</span> &#215; <span>۱</span>
-                                    </span>
-                                </div>
-                            </li>
-                            <li class="mini-cart__product d-flex justify-content-between">
-                                <div class="mini-cart__product__image">
-                                    <a href="#">
-                                        <img src="assets/img/products/prod-1-100x100.jpg" alt="products">
-                                    </a>
-                                </div>
-                                <div class="mini-cart__product__content pt-2">
-                                    <span class="mini-cart__product__title d-flex flex-row justify-content-between">
-                                        <a href="#"> محصول سماره یک </a>
-                                        <a href="#" class="">
-                                            &#10060;
-                                        </a>
-                                    </span>
-                                    <span class="mini-cart__product__quantity">
-                                        <span>۴۹,۰۰۰ تومان</span> &#215; <span>۱</span>
-                                    </span>
-                                </div>
-                            </li>
-                            <li class="mini-cart__product d-flex justify-content-between">
-                                <div class="mini-cart__product__image">
-                                    <a href="#">
-                                        <img src="assets/img/products/prod-1-100x100.jpg" alt="products">
-                                    </a>
-                                </div>
-                                <div class="mini-cart__product__content pt-2">
-                                    <span class="mini-cart__product__title d-flex flex-row justify-content-between">
-                                        <a href="#"> محصول سماره یک </a>
-                                        <a href="#" class="">
-                                            &#10060;
-                                        </a>
-                                    </span>
-                                    <span class="mini-cart__product__quantity">
-                                        <span>۴۹,۰۰۰ تومان</span> &#215; <span>۱</span>
-                                    </span>
-                                </div>
-                            </li>
-                        </ul>
-                        <div class="mini-cart__total">
-                            <span>جمع کل</span>
-                            <span class="ammount">۱۴۸,۰۰۰ تومان</span>
-                        </div>
-                        <div class="mini-cart__buttons">
-                            <a href="cart.html" class="btn btn-fullwidth btn-bg-sand mb--20">مشاهده سبد خرید</a>
-                            <a href="checkout.html" class="btn btn-fullwidth btn-bg-sand">پرداخت</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </aside>
-        <!-- Mini Cart End -->
+        {% include "store/cart_sidebar.html" %}
+        {% comment %} {% include "store/search_results.html" %} {% endcomment %}
 
         <!-- Global Overlay Start -->
         <div class="ShoppingYar-global-overlay"></div>
@@ -404,8 +367,8 @@
                                         <input type="number" class="quantity-input" name="qty" id="quick-qty" value="1" min="1">
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-small btn-bg-red btn-color-white btn-hover-2" onclick="window.location.href='cart.html'">
-                                    Add To Cart
+                                <button type="button" class="btn btn-small btn-bg-red btn-color-white btn-hover-2" onclick="window.location.href='cart_detail.html'">
+                                    {% trans "Add To Cart" %}
                                 </button>
                             </div>
                             <div class="product-footer-meta">
