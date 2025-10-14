@@ -28,10 +28,15 @@ class Category(GenerateSlugMixin, MPTTModel):
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
         unique_together = ('parent', 'slug')
+
+    def __str__(self):
+    # نمایش مسیر کامل برای دسته‌بندی‌ها (مثلاً "زنانه > لباس > پیراهن")
+        ancestors = self.get_ancestors(include_self=True)
+        return " > ".join([a.title for a in ancestors])
             
 
-    def __str__(self) -> str:
-        return self.title
+    # def __str__(self) -> str:
+        # return self.title
     
     
     def get_absolute_url(self):
@@ -51,7 +56,7 @@ class Product(GenerateSlugMixin, models.Model):
     source_field_name = 'name'
     
     name = models.CharField(max_length=255)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='products')
+    categories = models.ManyToManyField(Category, related_name='products', blank=True)
     slug = models.SlugField(unique=True, blank=True)
     unit_price = models.DecimalField(max_digits=6, decimal_places=2)
     description = models.TextField()
@@ -61,6 +66,7 @@ class Product(GenerateSlugMixin, models.Model):
     datetime_modified = models.DateTimeField(auto_now=True)
     discounts = models.ManyToManyField(Discount, blank=True)
     is_active = models.BooleanField(default=True)
+    cover = models.ImageField(upload_to='store/covers/', blank=True)
     
     
     def __str__(self) -> str:
@@ -170,4 +176,4 @@ class CartItem(models.Model):
     
     class Meta:
         unique_together = [['cart', 'product']]
-        
+          

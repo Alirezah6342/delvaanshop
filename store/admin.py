@@ -13,21 +13,23 @@ class CommentsInline(admin.TabularInline):
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['id','category', 'name', 'unit_price', 'inventory', 'is_active', 'slug']
+    list_display = ['id', 'name', 'unit_price', 'inventory', 'is_active', 'slug']
     list_editable = ['inventory', 'unit_price']
-    list_filter = ['category', 'is_active']
-    search_fields = ['name', 'category__title']
+    list_filter = ['categories', 'is_active']
+    search_fields = ['name', 'categories__title']
     prepopulated_fields = {'slug': ('name', )}
-    list_select_related = ['category']
     inlines = [CommentsInline, ]
+    filter_horizontal = ('categories', )
     
-    
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.prefetch_related('categories')
     
 
 @admin.register(models.Category)
 class CategoryAdmin(MPTTModelAdmin):
     mptt_level_indent = 40
-    list_display = ['id', 'title', 'short_description', 'top_product', 'slug']
+    list_display = ['id', 'title', 'parent', 'short_description', 'top_product', 'slug']
     search_fields = ['title']
     prepopulated_fields = {'slug': ('title', )}
     list_select_related = ['top_product', 'parent']
