@@ -1,0 +1,30 @@
+{% load static %}
+
+
+<div class="search-popup" id="searchPopup">
+  <div class="search-popup__overlay" onclick="closeSearch()"></div>
+  <div class="search-popup__content">
+    <button class="search-popup__close" onclick="closeSearch()">×</button>
+    <h3>جستجو در بین محصولات</h3>
+    <form method="get" action="{% url 'search_results' %}">
+      <input 
+        type="text" 
+        name="q" 
+        class="search-popup__input" 
+        placeholder="نام محصول را وارد کنید..." 
+        required>
+      <button type="submit" class="search-popup__button">
+        جستجو
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openSearch() {
+    document.getElementById("searchPopup").classList.add("active");
+  }
+  function closeSearch() {
+    document.getElementById("searchPopup").classList.remove("active");
+  }
+</script>
