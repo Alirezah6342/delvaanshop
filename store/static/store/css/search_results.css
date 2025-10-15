@@ -1,0 +1,321 @@
+/* =========================================================
+   search_results.css
+   - Popup + Main search + product cards + pagination
+   - Designed for RTL layouts (dir="rtl")
+   ========================================================= */
+
+/* ================= Theme variables (سریع سفارشی کن) ================ */
+:root{
+  --primary: #ff6b35;        /* رنگ اصلی */
+  --primary-600: #e05524;
+  --muted: #6b7280;
+  --bg: #f7f7fb;
+  --card-bg: #ffffff;
+  --radius: 12px;
+  --shadow-sm: 0 4px 12px rgba(16,24,40,0.06);
+  --shadow-lg: 0 10px 30px rgba(2,6,23,0.12);
+  --transition: 200ms cubic-bezier(.2,.9,.3,1);
+  --max-content-width: 1200px;
+}
+
+/* ================ Base layout tweaks ================ */
+.container--wide {
+  width: 100%;
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+/* ================= Popup (پاپ‌آپ جستجو) ================== */
+.searchform__popup {
+  display: none; /* نمایش با JS یا :target/checkbox کنترل میشه */
+  position: fixed;
+  inset: 0;
+  z-index: 1100;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.45);
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+/* اگر از کلاس active استفاده می‌کنی: */
+.searchform__popup.active,
+.searchform__popup.show {
+  display: flex;
+}
+
+/* بدنه پاپ‌آپ */
+.searchform__body {
+  width: 100%;
+  max-width: 560px;
+  background: var(--card-bg);
+  border-radius: calc(var(--radius) - 2px);
+  box-shadow: var(--shadow-lg);
+  padding: 26px;
+  position: relative;
+  text-align: right; /* RTL */
+  box-sizing: border-box;
+  animation: popup-zoom var(--transition);
+}
+
+/* close button (×) */
+.searchform__popup .btn-close {
+  position: absolute;
+  top: 12px;
+  left: 12px; /* در RTL دکمه در سمت چپ قرار می‌گیره */
+  font-size: 26px;
+  color: #222;
+  text-decoration: none;
+  line-height: 1;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+/* عنوان/توضیح داخل popup */
+.searchform__body p {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* input داخل popup */
+.searchform__input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #e6e6ea;
+  background: #fff;
+  font-size: 15px;
+  color: #111827;
+  box-sizing: border-box;
+  transition: box-shadow var(--transition), border-color var(--transition);
+  margin-bottom: 12px;
+}
+.searchform__input:focus{
+  outline: none;
+  box-shadow: 0 6px 18px rgba(79,70,229,0.06);
+  border-color: rgba(0,0,0,0.12);
+}
+
+/* submit btn داخل popup (آیکون) */
+.searchform__submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform var(--transition), background var(--transition);
+}
+.searchform__submit:hover{ background: var(--primary-600); transform: translateY(-1px); }
+
+/* اگر می‌خوای آیکون کوچیک باشه داخل دکمه */
+.searchform__submit i { font-size: 16px; }
+
+/* ================= Main search form (مستقیم در صفحه) ================= */
+.searchform__main {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 18px 0;
+  justify-content: flex; /* RTL: راست چین */
+}
+
+/* ورودی‌ها و select در فرم اصلی */
+.searchform__main input[type="text"],
+.searchform__main input[type="number"],
+.searchform__main select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e6e6ea;
+  min-width: 140px;
+  font-size: 14px;
+  color: #111827;
+  background: #fff;
+  transition: box-shadow var(--transition);
+}
+.searchform__main input:focus,
+.searchform__main select:focus {
+  outline: none;
+  box-shadow: 0 6px 18px rgba(59,130,246,0.06);
+}
+
+/* دکمه submit فرم اصلی */
+.searchform__main button[type="submit"]{
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background var(--transition);
+}
+.searchform__main button[type="submit"]:hover{ background: var(--primary-600); }
+
+/* ============= Products grid (کارت‌های محصول) ============= */
+.products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/* کارت محصول */
+.product-item {
+  background-color: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.product-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* ظرف تصویر */
+.product-item .thumb {
+  position: relative;
+  width: 100%;
+  padding-top: 75%; /* یعنی نسبت 4:3 — میشه 100% برای مربع */
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: #fafafa;
+}
+
+/* خود تصویر */
+.product-item .thumb img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* بدون بریدگی */
+  object-position: center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-item:hover .thumb img {
+  transform: scale(1.05);
+}
+
+/* متن */
+.product-item h3 {
+  font-size: 1rem;
+  margin-top: 10px;
+  color: #333;
+}
+
+.product-item p {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ============== Pagination ================== */
+.pagination{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  align-items:center;
+  margin: 22px 0;
+  flex-wrap:wrap;
+}
+
+.pagination a,
+.pagination button{
+  display:inline-block;
+  padding:8px 12px;
+  border-radius:8px;
+  background: #fff;
+  border:1px solid #eef2f7;
+  color: #111827;
+  text-decoration:none;
+  transition: background var(--transition), transform var(--transition);
+  box-shadow: 0 2px 6px rgba(2,6,23,0.03);
+}
+.pagination a:hover{ transform: translateY(-3px); background: #f8fafc; }
+
+/* active page */
+.pagination .current{
+  background: var(--primary);
+  color: #fff;
+  border-color: transparent;
+  font-weight:700;
+}
+
+/* prev/next */
+.pagination .nav {
+  background: transparent;
+  border: none;
+  padding: 6px 10px;
+  color: var(--muted);
+}
+
+/* نمایش شماره صفحه در موبایل کوچک‌تر */
+.pagination .page-info {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* ============== No results ================== */
+.no-results {
+  padding: 30px;
+  text-align: center;
+  background: #fff;
+  border-radius: 12px;
+  color: var(--muted);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============== Accessibility (دسترسی) ============== */
+.searchform__input,
+.searchform__main input,
+.searchform__main select,
+.searchform__main button,
+.searchform__submit {
+  outline-offset: 3px;
+}
+.searchform__input:focus,
+.searchform__main input:focus,
+.searchform__main select:focus,
+.searchform__main button:focus,
+.searchform__submit:focus {
+  box-shadow: 0 6px 18px rgba(59,130,246,0.08);
+}
+
+/* ============== Responsive ================== */
+@media (max-width: 992px){
+  .products { grid-template-columns: repeat(2,1fr); }
+  .searchform__main { justify-content: center; }
+}
+
+@media (max-width: 600px){
+  .products { grid-template-columns: 1fr; }
+  .product-item .thumb { height: 200px; }
+  .searchform__main { flex-direction: column; gap:10px; align-items: stretch; }
+  .searchform__main input, .searchform__main select { width: 100%; }
+  .searchform__main button { width: 100%; }
+  .searchform__body { padding: 18px; }
+}
+
+/* ============== Small UI helpers ================== */
+.muted { color: var(--muted); font-size: 13px; }
+.align-center { text-align: center; }
+
+/* animation */
+@keyframes popup-zoom {
+  from { opacity: 0; transform: translateY(8px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}

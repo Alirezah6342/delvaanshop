@@ -1,0 +1,76 @@
+.search-popup {
+  position: fixed;
+  inset: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(6px);
+}
+
+.search-popup.active {
+  display: flex;
+}
+
+.search-popup__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.search-popup__content {
+  position: relative;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  text-align: center;
+  animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.search-popup__close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #555;
+}
+
+.search-popup__input {
+  width: 80%;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.search-popup__input:focus {
+  border-color: #ff6600;
+  outline: none;
+}
+
+.search-popup__button {
+  background: #ff6600;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.search-popup__button:hover {
+  background: #e05500;
+}
