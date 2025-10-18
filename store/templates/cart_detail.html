@@ -23,7 +23,7 @@
                                                             <th>{% trans "Product Name" %}</th>
                                                             <th>{% trans "Price" %}</th>
                                                             <th>{% trans "Quantity" %}</th>
-                                                            <th>{% trans "" %}</th>
+                                                            <th>{% trans "total" %}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -33,7 +33,6 @@
                                                                 <td class="product-thumbnail text-left">
                                                                     {% if item.product_obj.cover %}
                                                                         <img class="shadow" class="m-auto" style="max-height: 400px;" src="{{ item.product_obj.cover.url }}" alt="{{ item.product_obj.name }}">
-                                                                    
                                                                     {% else %}
                                                                         <img src="assets/img/products/prod-10-70x88.jpg">
                                                                     {% endif %}

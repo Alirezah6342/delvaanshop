@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 19:46+0330\n"
-"PO-Revision-Date: 2025-09-11 19:47+0330\n"
+"POT-Creation-Date: 2025-10-16 16:27+0330\n"
+"PO-Revision-Date: 2025-10-16 16:33+0330\n"
 "Last-Translator:   <alireza@alireza.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -18,26 +18,116 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Translated-Using: django-rosetta 0.10.2\n"
 
-#: .\store\models.py:143
+#: .\store\cart.py:35
+msgid "Product successfully added to cart"
+msgstr "محصول با موفقیت به سبد خرید اضافه شد."
+
+#: .\store\cart.py:46
+msgid "Product successfully removed from cart"
+msgstr "محصول با موفقیت از سبد خرید حذف شد."
+
+#: .\store\models.py:149
 msgid "Comment Text"
 msgstr "متن دیدگاه"
 
-#: .\store\templates\store\product_detail.html:53
+#: .\store\templates\cart_detail.html:22
+msgid "Product Cover"
+msgstr "عکس محصول"
+
+#: .\store\templates\cart_detail.html:23
+msgid "Product Name"
+msgstr "نام محصول"
+
+#: .\store\templates\cart_detail.html:24
+msgid "Price"
+msgstr "قیمت"
+
+#: .\store\templates\cart_detail.html:25
+msgid "Quantity"
+msgstr "تعداد"
+
+#: .\store\templates\cart_detail.html:26
+#: .\store\templates\store\cart_sidebar.html:33
+msgid "total"
+msgstr "مجموع"
+
+#: .\store\templates\cart_detail.html:72
+msgid "Cart is Empty! please add some products to the cart"
+msgstr "کارت خالی است! لطفا تعدادی محصول به سبدخرید اضافه کنید."
+
+#: .\store\templates\cart_detail.html:73
+msgid "Go shopping"
+msgstr "برو به فروشگاه"
+
+#: .\store\templates\store\cart_sidebar.html:8
+msgid "Cart"
+msgstr "سبد خرید"
+
+#: .\store\templates\store\cart_sidebar.html:26
+#: .\store\templates\store\cart_sidebar.html:34
+#: .\store\templates\store\product_detail.html:45
+#: .\store\templates\store\product_detail.html:47
+#: .\store\templates\store\product_list.html:61
+msgid "$"
+msgstr "تومان"
+
+#: .\store\templates\store\cart_sidebar.html:37
+#| msgid "Add to Cart"
+msgid "Go to cart"
+msgstr "برو به سبد خرید"
+
+#: .\store\templates\store\cart_sidebar.html:38
+msgid "Checkout"
+msgstr "پرداخت"
+
+#: .\store\templates\store\product_detail.html:57
 msgid "Add to Cart"
 msgstr "اضافه به سبد خرید"
 
-#: .\store\templates\store\product_detail.html:57
+#: .\store\templates\store\product_detail.html:63
 msgid "Categories"
 msgstr "دسته بندی ها"
 
-#: .\store\templates\store\product_detail.html:72
+#: .\store\templates\store\product_detail.html:73
+#| msgid "Categories"
+msgid "No categories"
+msgstr "دسته بندی ندارد"
+
+#: .\store\templates\store\product_detail.html:86
 msgid "product description"
 msgstr "توضیحات محصول"
 
-#: .\store\templates\store\product_detail.html:149
+#: .\store\templates\store\product_detail.html:165
 msgid "Write your comment"
 msgstr "نظر خود را بنویسید"
 
-#: .\store\templates\store\product_detail.html:154
+#: .\store\templates\store\product_detail.html:170
 msgid "Submit"
 msgstr "ارسال"
+
+#: .\store\templates\store\product_detail.html:174
+#| msgid "Write your comment"
+msgid "To Write your comment please"
+msgstr "لطفا نظر خود را بنویسید"
+
+#: .\store\templates\store\product_detail.html:175
+msgid "Login"
+msgstr "ورود"
+
+#: .\store\templates\store\product_detail.html:372
+#: .\store\templates\store\product_list.html:63
+#| msgid "Add to Cart"
+msgid "Add To Cart"
+msgstr "اضافه به سبد خرید"
+
+#: .\store\templates\store\product_list.html:75
+msgid "Previous"
+msgstr "قبلی"
+
+#: .\store\templates\store\product_list.html:79
+msgid "Next"
+msgstr "بعدی"
+
+#: .\store\views.py:92
+msgid "Comment successfully created"
+msgstr "نظر با موفقیت ثبت شد."

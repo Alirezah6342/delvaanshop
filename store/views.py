@@ -102,7 +102,12 @@ class ProductSearchView(generic.ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        queryset = Product.objects.filter(is_active=True).prefetch_related('categories')
+        queryset = Product.objects.filter(is_active=True).prefetch_related(
+            Prefetch(
+            'categories', 
+            queryset=Category.objects.all().prefetch_related('parent')
+            )
+        ) 
         
         search_query = self.request.GET.get("q", "").strip()
         if search_query:
