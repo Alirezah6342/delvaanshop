@@ -58,7 +58,7 @@ class Product(GenerateSlugMixin, models.Model):
     name = models.CharField(max_length=255)
     categories = models.ManyToManyField(Category, related_name='products', blank=True)
     slug = models.SlugField(unique=True, blank=True)
-    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
+    unit_price = models.PositiveIntegerField(default=0)
     description = models.TextField()
     short_description = models.CharField(max_length=255)
     inventory = models.PositiveIntegerField(validators=[MinValueValidator(0)])

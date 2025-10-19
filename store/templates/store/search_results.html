@@ -1,6 +1,8 @@
 {% extends "_base.html" %}
 {% load static %}
 {% load i18n %}
+{% load persian_translation_tags %}
+{% load humanize %}
 
 {% block content %}
 
@@ -79,7 +81,7 @@
                     <p>{{ product.short_description }}</p>
                 {% endif %}
 
-                <p>قیمت: {{ product.unit_price }} تومان</p>
+                <p>قیمت: {{ product.unit_price|intcomma:False|translate_number }} تومان</p>
 
                 <!-- نمایش دسته‌بندی درختی محصول -->
                 <p>دسته‌بندی:

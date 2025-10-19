@@ -17,6 +17,7 @@ pillow = "*"
 django-mptt = "*"
 django-rosetta = "*"
 environs = {extras = ["django"], version = "*"}
+django-jalali = "*"
 
 [dev-packages]
 
