@@ -24,7 +24,7 @@
                             <h1 class="page-title">جزئیات محصول «{{ product.name }}»</h1>
                         </div>
                     </div>
-                </div>
+                </div>  
             </div>
         </div>
         <!-- Breadcrumb area End -->
@@ -43,13 +43,13 @@
                         <div class="col-12 col-sm-8 product-main-details mt-md--50">
                             <div class="product-summary pl-lg--30 pl-md--0 text-right p-4">
                                 <h3 class="product-title mb--20">{{ product.name }}</h3>
-                                <p class="product-short-description mb--20">
-                                {{ product.description }}
-                                </p>
+                                    <h5 class="product-short-description">
+                                        {{ product.short_description|truncatechars:300 }}
+                                    </h5>
                                 <div class="my-5 py-5 product-price-wrapper mb--25">
                                     <span class="money text-success">{{ product.unit_price|intcomma:False|translate_number }} {% trans "$" %}</span>
                                     <span class="price-separator">-</span>
-                                    <span class="money old-price text-danger">۲۱۰,۰۰۰ {% trans "$" %}</span>
+                                    <span class="money old-price text-danger">1000000 {% trans "$" %}</span>
                                 </div>
                                 <div class="product-action d-flex align-items-sm-center align-content-center mb--30">
                                     <form action="{% url 'cart_add' product.id %}" method="POST">
@@ -65,11 +65,11 @@
                                         </div>
                                     </form>
                                 <div class="product-footer-meta mt-5 pt-5">
-                                    <p><span class="m-0">{% translate 'Categories' %}:</span>
+                                    <span class="m-0">{% translate 'Categories' %}:</span>
                                         {% for cat in product.categories.all %}
                                             {% with ancestors=cat.get_ancestors %}
                                                 {% for ancestor in ancestors %}
-                                                    <a href="{{ ancestor.get_absolute_url }}">{{ ancestor.title }}</a> →
+                                                    <a href="{{ product.get_absolute_url }}">{{ ancestor.title }}</a> →
                                                 {% endfor %}
                                                 <a href="{{ cat.get_absolute_url }}">{{ cat.title }}</a>
                                             {% endwith %}
@@ -77,7 +77,7 @@
                                         {% empty %}
                                             {% translate "No categories" %}
                                         {% endfor %}
-                                    </p>
+                                    
                                 </div>
 
                             </div>
@@ -100,9 +100,7 @@
                                 <div class="tab-content product-data-tab__content" id="product-tabContent">
                                     <div class="tab-pane fade show active" id="nav-description" role="tabpanel" aria-labelledby="nav-description-tab">
                                         <div class="product-description text-justify">
-                                            <p>
-                                                {{ product.description }}
-                                            </p>
+                                                {{ product.description|safe }}
                                         </div>
                                     </div>
                                     <div class="tab-pane text-right" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">
@@ -193,60 +191,6 @@
             </div>
         </div>
         <!-- Main Content Wrapper End -->
-
-        <!-- Footer Start-->
-        <footer class="footer">
-            <div class="footer-top bg-color ptb--50" data-bg-color="#f6f6f6">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-9 text-center">
-                            <div class="footer-widget mb--50">
-                                <div class="textwidget">
-                                    <img src="{% static 'store/img/DelvaanShop_logo.png' %}" alt="Logo">
-                                </div>
-                            </div>
-                            <div class="footer-widget mb--50 pb--1">
-                                <ul class="footer-menu">
-                                    <li><a href="">درباره ما</a></li>
-                                    <li><a href="">قوانین و مقررات</a></li>
-                                    <li><a href="">تماس با ما</a></li>
-                                </ul>
-                            </div>
-                            <div class="footer-widget">
-                                DelvaanShop.com © | all rights reserved
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <!-- Footer End-->
-
-        <!-- Search form Popup Start -->
-       <!-- ===== Search Popup Form (CSS-only) ===== -->
-<input type="checkbox" id="search-toggle" hidden>
-
-<li class="header-toolbar__item">
-    <!-- label به جای لینک href -->
-    <label for="search-toggle" class="header-toolbar__btn toolbar-btn">
-        <i class="flaticon flaticon-search"></i>
-    </label>
-</li>
-
-<div class="searchform__popup">
-    <!-- دکمه × برای بستن popup -->
-    <label for="search-toggle" class="btn-close">&times;</label>
-
-    <div class="searchform__body">
-        <p>در باکس زیر عبارت خود را وارد کنید:</p>
-        <form method="get" action="{% url 'search_results' %}">
-            <input type="text" name="q" placeholder="جستجو در بین محصولات..." value="{{ search_query }}">
-            <button type="submit">
-                <i class="flaticon flaticon-magnifying-glass-icon"></i> جستجو
-            </button>
-        </form>
-    </div>
-</div>
 
         <!-- Search form Popup End -->
 

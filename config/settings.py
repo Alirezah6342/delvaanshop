@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'accounts',
     'allauth',
     'allauth.account',
+    'ckeditor',
     
     # local apps
     'store',
@@ -67,6 +68,7 @@ MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     # django allauth
     "allauth.account.middleware.AccountMiddleware",
     'django.middleware.common.CommonMiddleware',
@@ -108,11 +110,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': env('DJANGO_DATABASE_ENGINE'),
         'NAME': env('DJANGO_DATABASE_NAME'),
-        'HOST': env('DJANGO_DATABASE_HOST'),
         'USER': env('DJANGO_DATABASE_USER'),
-        'PASSWORD': env('DJANGO_DATABASE_PASSWORD'),
+        'PASSWORD': env('POSTGRES_PASSWORD'),
+        'HOST': env('DJANGO_DATABASE_HOST'),
+        'PORT': env('DJANGO_DATABASE_PORT', default='5432'),
     }
 }
 
@@ -201,7 +204,16 @@ LOGIN_REDIRECT_URL = '/store/products/'
 
 # static files config
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [str(BASE_DIR.joinpath('static'))]
+# STATICFILES_DIRS = [str(BASE_DIR.joinpath('static'))]
+# STATIC_ROOT = str(BASE_DIR.joinpath('staticfiles'))
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    BASE_DIR / "accounts" / "static",
+    BASE_DIR / "store" / "static",
+]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 

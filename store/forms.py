@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Product, Comment
+from .models import Order, Product, Comment
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -25,3 +25,9 @@ class AddToCartProductForm(forms.Form):
     
     inplace = forms.BooleanField(required=False, widget=forms.HiddenInput)
     
+    
+# class OrderForm(forms.ModelForm):
+#     class Meta:
+#         model = Order
+        
+        

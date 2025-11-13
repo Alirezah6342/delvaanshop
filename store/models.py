@@ -5,6 +5,7 @@ from django.conf import settings
 from django.urls import reverse
 
 from mptt.models import MPTTModel, TreeForeignKey
+from ckeditor.fields import RichTextField
 # from django.utils.text import slugify
 
 from uuid import uuid4
@@ -29,14 +30,16 @@ class Category(GenerateSlugMixin, MPTTModel):
         verbose_name_plural = 'Categories'
         unique_together = ('parent', 'slug')
 
-    def __str__(self):
+    # def __str__(self):
     # نمایش مسیر کامل برای دسته‌بندی‌ها (مثلاً "زنانه > لباس > پیراهن")
-        ancestors = self.get_ancestors(include_self=True)
-        return " > ".join([a.title for a in ancestors])
-            
+        # ancestors = self.get_ancestors(include_self=True)
+        # return " > ".join([a.title for a in ancestors])
 
-    # def __str__(self) -> str:
-        # return self.title
+    def __str__(self) -> str:
+        return self.title
+    
+    def get_full_path(self):
+        return ">".join(a.title for a in self.get_ancestors(include_self=True))
     
     
     def get_absolute_url(self):
@@ -59,8 +62,8 @@ class Product(GenerateSlugMixin, models.Model):
     categories = models.ManyToManyField(Category, related_name='products', blank=True)
     slug = models.SlugField(unique=True, blank=True)
     unit_price = models.PositiveIntegerField(default=0)
-    description = models.TextField()
-    short_description = models.CharField(max_length=255)
+    description = RichTextField()
+    short_description = models.TextField()
     inventory = models.PositiveIntegerField(validators=[MinValueValidator(0)])
     datetime_created = models.DateTimeField(auto_now_add=True)
     datetime_modified = models.DateTimeField(auto_now=True)
@@ -87,11 +90,14 @@ class Customer(models.Model):
     phone_number = models.CharField(max_length=255)
     birth_date = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+   
+    @property
+    def full_name(self):
+        return f'{self.user.first_name} {self.user.last_name}'.strip() or self.user.username
+         
     
-    
-    def __str__(self) -> str:
-        return f'{self.user.first_name} {self.user.last_name}'
-    
+    def __str__(self):
+        return self.full_name
     
 class Address(models.Model):
     customer = models.OneToOneField(Customer, on_delete=models.CASCADE, primary_key=True)
@@ -113,19 +119,24 @@ class Order(models.Model):
     ]
     
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='orders')
-    datetime_created = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=1, choices=ORDER_STATUS, default=ORDER_STATUS_UNPAID)
+    order_notes = models.CharField(max_length=700, blank=True)
+    datetime_created = models.DateTimeField(auto_now_add=True)
+    datetime_modified = models.DateTimeField(auto_now=True)
     
-    def __str__(self) -> str:
-        return f'Order id=({self.pk})'
-    
+    def __str__(self):
+        customer_name = self.customer.full_name if self.customer else "Unknown Customer"
+        return f"Order #{self.pk} - {customer_name}"
+
     
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name='items')
     product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='order_items')
-    quantity = models.PositiveSmallIntegerField()
-    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
+    quantity = models.PositiveSmallIntegerField(default=1)
+    unit_price = models.PositiveIntegerField()
     
+    def __str__(self):
+        return f'OrderItem {self.pk}: {self.product} × {self.quantity} (unit_price: {self.unit_price})'
     
     class Meta:
         unique_together = [['order', 'product']]

@@ -1,0 +1,39 @@
+# فایل‌ها و فولدرهای سیستمی که نباید داخل کانتینر برن
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+
+# فولدر محیط مجازی
+venv/
+.env
+Pipfile
+Pipfile.lock
+
+# دیتابیس‌های محلی یا SQLite
+*.sqlite3
+
+# فایل‌های کش و لاگ
+*.log
+*.pot
+*.mo
+*.db
+*.DS_Store
+
+# فایل‌های توسعه‌ای IDE و سیستم
+.idea/
+.vscode/
+*.iml
+*.tmp
+*.bak
+
+# فایل‌های تست و debug
+*.coverage
+htmlcov/
+.coverage.*
+
+# فولدرهای static و media اگر داخل volumes هستن
+staticfiles/
+media/

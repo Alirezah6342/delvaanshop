@@ -9,7 +9,7 @@ from django.db.models import Q
 
 from .cart import Cart
 from .forms import ProductForm, CommentForm, AddToCartProductForm
-from .models import Category, Customer, Product, Comment
+from .models import Category, Customer, Order, Product, Comment
 
 
 class HomeView(generic.TemplateView):
@@ -182,3 +182,12 @@ def remove_from_cart(request, product_id):
     cart.remove(product)
     
     return redirect('cart_detail')
+
+
+
+# class OrderCreateView(generic.CreateView):
+#     model = Order
+#     template_name = 'store/order_create.html'
+    
+def order_create_view(request):
+    return render(request, 'store/order_create.html')
